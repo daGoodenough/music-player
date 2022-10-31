@@ -27,12 +27,20 @@ var createSongRow = function (songNumber, songName, songLength) {
       $(this).html(pauseButtonTemplate);
       currentlyPlayingSongNumber = clickedSongNumber;
 
-      setSong(songNumber);
+   
+      setSong();
+    
       currentSoundFile.play();
     } else {
-      currentlyPlayingSongNumber = null;
-      $(this).html(clickedSongNumber);
-      currentSoundFile.pause();
+      if(currentSoundFile.isPaused()) {
+        currentSoundFile.play();
+        $(this).html(pauseButtonTemplate);
+      }else {
+        currentSoundFile.pause();
+        $(this).html(playButtonTemplate);
+      }
+      // currentlyPlayingSongNumber = null;
+      // $(this).html(clickedSongNumber);
     }
   }
 
