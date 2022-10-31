@@ -27,10 +27,12 @@ var createSongRow = function (songNumber, songName, songLength) {
       $(this).html(pauseButtonTemplate);
       currentlyPlayingSongNumber = clickedSongNumber;
 
-      setSong();
+      setSong(songNumber);
+      currentSoundFile.play();
     } else {
       currentlyPlayingSongNumber = null;
       $(this).html(clickedSongNumber);
+      currentSoundFile.pause();
     }
   }
 
@@ -57,10 +59,21 @@ var createSongRow = function (songNumber, songName, songLength) {
 };
 
 function setSong() {
-  
+  if(currentSoundFile){
+    currentSoundFile.stop();
+  }
+
+  let mp3URL = currentAlbum.songs[currentlyPlayingSongNumber - 1].audioUrl;
+
+  currentSoundFile = new buzz.sound(mp3URL, {
+    formats: [ 'mp3' ],
+    preload: true,
+  });
 }
 
 var setCurrentAlbum = function (album) {
+  currentAlbum = album;
+
   var $albumTitle = $(".album-view-title");
   var $albumArtist = $(".album-view-artist");
   var $albumReleaseInfo = $(".album-view-release-info");
@@ -90,5 +103,8 @@ var pauseButtonTemplate =
   '<a class="album-song-button"><span class="ion-pause"></span></a>';
 
 let currentlyPlayingSongNumber = null;
+let currentSoundFile = null;
+
+let currentAlbum = null;
 
 setCurrentAlbum(albums[0]);
